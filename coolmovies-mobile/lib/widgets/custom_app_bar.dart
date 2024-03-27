@@ -54,7 +54,8 @@ class CustomAppBar extends StatelessWidget {
                     child: Center(
                         child: Text(
                       title,
-                      style: mediumText.copyWith(color: Colors.white),
+                      style: mediumText.copyWith(
+                          color: Colors.white, fontSize: 15),
                     )),
                   ),
                 ),
