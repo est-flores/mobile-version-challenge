@@ -3,6 +3,8 @@ import 'package:coolmovies/constants/colors.dart';
 import 'package:coolmovies/constants/layout.dart';
 import 'package:coolmovies/constants/text_styles.dart';
 import 'package:coolmovies/controllers/reviews_controller.dart';
+import 'package:coolmovies/models/review.dart';
+import 'package:coolmovies/widgets/review_tile.dart';
 import 'package:coolmovies/widgets/shimmer_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,11 +44,11 @@ class _MovieDetailViewState extends State<MovieDetailView> {
     super.initState();
     _reviewsController = Provider.of<ReviewsController>(context, listen: false);
     Future.delayed(Duration.zero, () => getReviews());
-    getReviews();
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Review> reviews = Provider.of<ReviewsController>(context).reviews;
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -106,7 +108,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                       sbh(15),
                       Text('Released ${widget.releaseDate}',
                           style: regularText.copyWith(
-                              fontSize: 15, color: mediumGray),
+                              fontSize: 15, color: lightGray),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2),
                       sbh(25)
@@ -115,9 +117,22 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                 ),
                 loading
                     ? const Center(
-                        child: CircularProgressIndicator(color: Colors.white),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 28.0),
+                          child: CircularProgressIndicator(color: Colors.white),
+                        ),
                       )
-                    : Container(),
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: reviews.length,
+                        itemBuilder: ((context, index) {
+                          Review review = reviews[index];
+                          return ReviewTile(
+                              title: review.title,
+                              body: review.body,
+                              rating: review.rating.toDouble());
+                        })),
               ],
             ),
           ),

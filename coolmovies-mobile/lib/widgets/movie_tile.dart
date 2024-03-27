@@ -72,7 +72,7 @@ class MovieTile extends StatelessWidget {
                                 sbh(10),
                                 Text('Released $releaseDate',
                                     style: regularText.copyWith(
-                                        fontSize: 15, color: mediumGray),
+                                        fontSize: 15, color: lightGray),
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 2),
                               ],

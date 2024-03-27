@@ -6,6 +6,7 @@ class ReviewsController extends ChangeNotifier {
   List<Review> reviews = [];
 
   fetchReviews({required BuildContext context, required String movieId}) async {
+    reviews.clear();
     var client = GraphQLProvider.of(context).value;
 
     final QueryResult result = await client.query(
