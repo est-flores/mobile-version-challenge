@@ -6,6 +6,7 @@ import 'package:coolmovies/widgets/shimmer_container.dart';
 import 'package:flutter/material.dart';
 
 class MovieTile extends StatelessWidget {
+  final String id;
   final String imgUrl;
   final String title;
   final String releaseDate;
@@ -15,13 +16,15 @@ class MovieTile extends StatelessWidget {
       this.onTap,
       required this.imgUrl,
       required this.title,
-      required this.releaseDate});
+      required this.releaseDate,
+      required this.id});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: GestureDetector(
+        onTap: onTap,
         child: Container(
           color: Colors.transparent,
           child: Column(

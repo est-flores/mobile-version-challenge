@@ -1,6 +1,8 @@
 import 'package:coolmovies/constants/colors.dart';
+import 'package:coolmovies/constants/navigation.dart';
 import 'package:coolmovies/constants/text_styles.dart';
 import 'package:coolmovies/models/movie.dart';
+import 'package:coolmovies/views/movie_detail_view.dart';
 import 'package:coolmovies/widgets/movie_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -84,12 +86,22 @@ class _MovieListState extends State<MovieList> {
                     parent: BouncingScrollPhysics()),
                 itemCount: movies.length,
                 itemBuilder: (context, index) {
+                  Movie movie = movies[index];
                   return Padding(
                     padding: EdgeInsets.only(top: index == 0 ? 80 : 0),
                     child: MovieTile(
-                      imgUrl: movies[index].imgUrl,
-                      title: movies[index].title,
-                      releaseDate: movies[index].releaseDate,
+                      onTap: () => pushNavigation(
+                          context: context,
+                          view: MovieDetailView(
+                            id: movie.id,
+                            imgUrl: movie.imgUrl,
+                            title: movie.title,
+                            releaseDate: movie.releaseDate,
+                          )),
+                      id: movie.id,
+                      imgUrl: movie.imgUrl,
+                      title: movie.title,
+                      releaseDate: movie.releaseDate,
                     ),
                   );
                 },
