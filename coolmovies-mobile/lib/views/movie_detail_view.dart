@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coolmovies/constants/colors.dart';
 import 'package:coolmovies/constants/layout.dart';
 import 'package:coolmovies/constants/text_styles.dart';
+import 'package:coolmovies/controllers/reviews_controller.dart';
 import 'package:coolmovies/widgets/shimmer_container.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetailView extends StatefulWidget {
   final String id;
@@ -22,6 +24,27 @@ class MovieDetailView extends StatefulWidget {
 }
 
 class _MovieDetailViewState extends State<MovieDetailView> {
+  late ReviewsController _reviewsController;
+  bool loading = false;
+
+  void getReviews() async {
+    setState(() {
+      loading = true;
+    });
+    await _reviewsController.fetchReviews(context: context, movieId: widget.id);
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _reviewsController = Provider.of<ReviewsController>(context, listen: false);
+    Future.delayed(Duration.zero, () => getReviews());
+    getReviews();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +113,11 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                     ],
                   ),
                 ),
-                sbh(1500),
+                loading
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                    : Container(),
               ],
             ),
           ),

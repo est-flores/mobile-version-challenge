@@ -15,7 +15,6 @@ class MovieList extends StatefulWidget {
 }
 
 class _MovieListState extends State<MovieList> {
-  final ValueNotifier<Map<String, dynamic>?> _data = ValueNotifier(null);
   List<Movie> movies = [];
   bool isLoading = false;
 
@@ -55,9 +54,7 @@ class _MovieListState extends State<MovieList> {
     }
 
     if (result.data != null) {
-      _data.value = result.data!['allMovies'];
-
-      final List<dynamic> moviesData = _data.value?['nodes'];
+      final List<dynamic> moviesData = result.data!['allMovies']['nodes'];
       movies = moviesData.map((json) => Movie.fromJson(json)).toList();
 
       setState(() {
