@@ -16,8 +16,10 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [const MovieList(), CustomAppBar(title: widget.title)],
+      body: SafeArea(
+        child: Stack(
+          children: [const MovieList(), CustomAppBar(title: widget.title)],
+        ),
       ),
     );
   }
