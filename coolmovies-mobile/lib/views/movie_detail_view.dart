@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:coolmovies/constants/colors.dart';
 import 'package:coolmovies/constants/layout.dart';
+import 'package:coolmovies/constants/navigation.dart';
 import 'package:coolmovies/constants/text_styles.dart';
 import 'package:coolmovies/controllers/reviews_controller.dart';
 import 'package:coolmovies/models/review.dart';
+import 'package:coolmovies/views/write_review_view.dart';
 import 'package:coolmovies/widgets/review_tile.dart';
 import 'package:coolmovies/widgets/shimmer_container.dart';
 import 'package:flutter/material.dart';
@@ -125,6 +127,8 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.only(
+                            bottom: kFloatingActionButtonMargin + 90),
                         itemCount: reviews.length,
                         itemBuilder: ((context, index) {
                           Review review = reviews[index];
@@ -134,6 +138,61 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                               rating: review.rating.toDouble());
                         })),
               ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: 120,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                      colors: <Color>[
+                    Colors.black.withOpacity(1),
+                    Colors.black.withOpacity(0),
+                  ],
+                      stops: const [
+                    0,
+                    1
+                  ])),
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: GestureDetector(
+                onTap: () =>
+                    pushNavigation(context: context, view: WriteReviewView()),
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: mediumGray,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Write a Review',
+                              style: regularText.copyWith(
+                                  fontSize: 15, color: Colors.white),
+                            ),
+                            svg(
+                              assetName: 'edit_icon',
+                              color: Colors.white,
+                              height: 22,
+                            )
+                          ],
+                        ),
+                      ),
+                    )),
+              ),
             ),
           ),
           _backButton(context),
