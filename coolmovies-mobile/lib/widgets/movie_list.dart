@@ -16,11 +16,11 @@ class MovieList extends StatefulWidget {
 
 class _MovieListState extends State<MovieList> {
   List<Movie> movies = [];
-  bool isLoading = false;
+  bool loading = false;
 
   void _fetchData() async {
     setState(() {
-      isLoading = true;
+      loading = true;
     });
     var client = GraphQLProvider.of(context).value;
 
@@ -49,7 +49,7 @@ class _MovieListState extends State<MovieList> {
 
     if (result.hasException) {
       setState(() {
-        isLoading = false;
+        loading = false;
       });
     }
 
@@ -58,7 +58,7 @@ class _MovieListState extends State<MovieList> {
       movies = moviesData.map((json) => Movie.fromJson(json)).toList();
 
       setState(() {
-        isLoading = false;
+        loading = false;
       });
     }
   }
@@ -71,7 +71,7 @@ class _MovieListState extends State<MovieList> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
+    return loading
         ? const Center(
             child: CircularProgressIndicator(
               color: Colors.white,

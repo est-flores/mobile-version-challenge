@@ -6,8 +6,8 @@ class ReviewsController extends ChangeNotifier {
   List<Review> reviews = [];
 
   fetchReviews({required BuildContext context, required String movieId}) async {
-    reviews.clear();
     var client = GraphQLProvider.of(context).value;
+    reviews.clear();
 
     final QueryResult result = await client.query(
       QueryOptions(
@@ -17,6 +17,7 @@ class ReviewsController extends ChangeNotifier {
                 filter: { movieId: { equalTo: \$movieId } }
               ) {
                 nodes {
+                  id
                   title
                   body
                   rating
@@ -27,6 +28,7 @@ class ReviewsController extends ChangeNotifier {
               }
             }
           '''),
+        fetchPolicy: FetchPolicy.noCache,
         variables: {
           'movieId': movieId,
         },
@@ -44,5 +46,54 @@ class ReviewsController extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  createReview(
+      {required BuildContext context,
+      required String currentUserId,
+      required String movieId,
+      required String title,
+      required String body,
+      required int rating}) async {
+    var client = GraphQLProvider.of(context).value;
+    await client.mutate(MutationOptions(
+      document: gql('''
+            mutation CreateMovieReview(\$title: String!, \$body: String!, \$rating: Int!, \$movieId: UUID!, \$userReviewerId: UUID!) {
+              createMovieReview(input: {
+                movieReview: {
+                  title: \$title,
+                  body: \$body,
+                  rating: \$rating,
+                  movieId: \$movieId,
+                  userReviewerId: \$userReviewerId
+                }
+              }) {
+                movieReview {
+                  id
+                  title
+                  body
+                  rating
+                  movieByMovieId {
+                    title
+                  }
+                  userByUserReviewerId {
+                    name
+                  }
+                }
+              }
+            }
+          '''),
+      fetchPolicy: FetchPolicy.noCache,
+      variables: {
+        'movieId': movieId,
+        'title': title,
+        'body': body,
+        'rating': rating,
+        'userReviewerId': currentUserId
+      },
+      onCompleted: (data) async {
+        await fetchReviews(context: context, movieId: movieId);
+      },
+    ));
   }
 }

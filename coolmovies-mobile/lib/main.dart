@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:coolmovies/controllers/reviews_controller.dart';
+import 'package:coolmovies/controllers/user_controller.dart';
 import 'package:coolmovies/views/home/home_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -34,14 +37,18 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ReviewsController()),
+        ChangeNotifierProvider(create: (_) => UserController()),
       ],
-      child: MaterialApp(
-        title: 'Coolmovies',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
+      child: OKToast(
+        child: MaterialApp(
+          builder: EasyLoading.init(),
+          title: 'Coolmovies',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: const HomeView(title: 'Coolmovies'),
         ),
-        home: const HomeView(title: 'Coolmovies'),
       ),
     );
   }

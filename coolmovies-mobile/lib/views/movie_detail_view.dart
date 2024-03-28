@@ -4,6 +4,7 @@ import 'package:coolmovies/constants/layout.dart';
 import 'package:coolmovies/constants/navigation.dart';
 import 'package:coolmovies/constants/text_styles.dart';
 import 'package:coolmovies/controllers/reviews_controller.dart';
+import 'package:coolmovies/controllers/user_controller.dart';
 import 'package:coolmovies/models/review.dart';
 import 'package:coolmovies/views/write_review_view.dart';
 import 'package:coolmovies/widgets/review_tile.dart';
@@ -16,12 +17,13 @@ class MovieDetailView extends StatefulWidget {
   final String imgUrl;
   final String title;
   final String releaseDate;
-  const MovieDetailView(
-      {super.key,
-      required this.id,
-      required this.imgUrl,
-      required this.title,
-      required this.releaseDate});
+  const MovieDetailView({
+    super.key,
+    required this.id,
+    required this.imgUrl,
+    required this.title,
+    required this.releaseDate,
+  });
 
   @override
   State<MovieDetailView> createState() => _MovieDetailViewState();
@@ -29,6 +31,7 @@ class MovieDetailView extends StatefulWidget {
 
 class _MovieDetailViewState extends State<MovieDetailView> {
   late ReviewsController _reviewsController;
+  late UserController _userController;
   bool loading = false;
 
   void getReviews() async {
@@ -41,16 +44,29 @@ class _MovieDetailViewState extends State<MovieDetailView> {
     });
   }
 
+  void getCurrentUser() async {
+    setState(() {
+      loading = true;
+    });
+    await _userController.fetchCurrentUser(context);
+    setState(() {
+      loading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _reviewsController = Provider.of<ReviewsController>(context, listen: false);
+    _userController = Provider.of<UserController>(context, listen: false);
     Future.delayed(Duration.zero, () => getReviews());
+    Future.delayed(Duration.zero, () => getCurrentUser());
   }
 
   @override
   Widget build(BuildContext context) {
     List<Review> reviews = Provider.of<ReviewsController>(context).reviews;
+    String? currentUserId = Provider.of<UserController>(context).currentUser.id;
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -135,6 +151,7 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                           return ReviewTile(
                               title: review.title,
                               body: review.body,
+                              // currentUserId == review.userReviewerId,
                               rating: review.rating.toDouble());
                         })),
               ],
@@ -163,8 +180,12 @@ class _MovieDetailViewState extends State<MovieDetailView> {
             child: Align(
               alignment: Alignment.bottomCenter,
               child: GestureDetector(
-                onTap: () =>
-                    pushNavigation(context: context, view: WriteReviewView()),
+                onTap: () => pushNavigation(
+                    context: context,
+                    view: WriteReviewView(
+                      currentUserId: currentUserId,
+                      movieId: widget.id,
+                    )),
                 child: Padding(
                     padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 0),
                     child: Container(

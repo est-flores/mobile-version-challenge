@@ -71,7 +71,17 @@ class ReviewTile extends StatelessWidget {
                       style:
                           regularText.copyWith(fontSize: 15, color: lightGray),
                     ),
-                    sbh(20),
+                    sbh(10),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: TextButton(
+                          onPressed: () {},
+                          child: const Icon(
+                            Icons.more_horiz,
+                            size: 35,
+                            color: Colors.white,
+                          )),
+                    ),
                   ],
                 ),
               ),

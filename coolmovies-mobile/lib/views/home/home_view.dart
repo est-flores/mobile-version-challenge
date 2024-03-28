@@ -18,7 +18,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Stack(
-          children: [const MovieList(), CustomAppBar(title: widget.title)],
+          children: [MovieList(), CustomAppBar(title: widget.title)],
         ),
       ),
     );

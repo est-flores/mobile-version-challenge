@@ -1,12 +1,25 @@
 import 'package:coolmovies/constants/colors.dart';
 import 'package:coolmovies/constants/layout.dart';
 import 'package:coolmovies/constants/text_styles.dart';
+import 'package:coolmovies/controllers/reviews_controller.dart';
+
 import 'package:coolmovies/widgets/custom_button.dart';
+import 'package:coolmovies/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:oktoast/oktoast.dart';
+import 'package:provider/provider.dart';
 
 class WriteReviewView extends StatefulWidget {
-  const WriteReviewView({super.key});
+  final String movieId;
+  final String currentUserId;
+  const WriteReviewView({
+    super.key,
+    required this.movieId,
+    required this.currentUserId,
+  });
 
   @override
   State<WriteReviewView> createState() => _WriteReviewViewState();
@@ -16,6 +29,13 @@ class _WriteReviewViewState extends State<WriteReviewView> {
   final TextEditingController titleController = TextEditingController();
   final commentController = TextEditingController();
   double userRating = 0;
+  late ReviewsController _reviewsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _reviewsController = Provider.of<ReviewsController>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +60,8 @@ class _WriteReviewViewState extends State<WriteReviewView> {
                     RatingBar.builder(
                       glowColor: const Color.fromARGB(255, 255, 220, 116),
                       initialRating: 0,
-                      minRating: 0.5,
+                      minRating: 1,
                       direction: Axis.horizontal,
-                      allowHalfRating: true,
                       itemCount: 5,
                       itemSize: 50,
                       itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
@@ -189,8 +208,35 @@ class _WriteReviewViewState extends State<WriteReviewView> {
                       child: CustomButton(
                         backgroundColor: actionColor,
                         padding: const EdgeInsets.all(0),
-                        onTap: () {
-                          if (userRating != 0 && commentController.text != '') {
+                        onTap: () async {
+                          if (userRating != 0 &&
+                              commentController.text.isNotEmpty &&
+                              titleController.text.isNotEmpty) {
+                            EasyLoading.show();
+
+                            _reviewsController.createReview(
+                                context: context,
+                                currentUserId: widget.currentUserId,
+                                movieId: widget.movieId,
+                                title: titleController.text,
+                                body: commentController.text,
+                                rating: userRating.toInt());
+
+                            EasyLoading.dismiss();
+                            showToastWidget(
+                                const CustomToast(
+                                  icon: Padding(
+                                      padding: EdgeInsets.only(bottom: 0),
+                                      child: Icon(
+                                        Icons.check_circle_outline_rounded,
+                                        color: mediumGray,
+                                        size: 70,
+                                      )),
+                                  text: 'Submitted',
+                                  textColor: darkGray,
+                                ),
+                                duration: const Duration(seconds: 2));
+                            Navigator.of(context).pop();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               showCloseIcon: true,
