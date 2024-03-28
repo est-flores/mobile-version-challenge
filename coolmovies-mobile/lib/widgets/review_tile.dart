@@ -1,19 +1,25 @@
 import 'package:coolmovies/constants/colors.dart';
 import 'package:coolmovies/constants/layout.dart';
 import 'package:coolmovies/constants/text_styles.dart';
+import 'package:coolmovies/widgets/custom_dialog.dart';
+import 'package:coolmovies/widgets/review_detail.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ReviewTile extends StatelessWidget {
+  final String id;
   final String title;
   final String body;
   final double rating;
+  final String movieId;
   const ReviewTile({
     super.key,
     required this.title,
     required this.body,
     required this.rating,
+    required this.id,
+    required this.movieId,
   });
 
   @override
@@ -75,7 +81,12 @@ class ReviewTile extends StatelessWidget {
                     Align(
                       alignment: Alignment.topRight,
                       child: TextButton(
-                          onPressed: () {},
+                          onPressed: () => displayCustomDialog(
+                              context: context,
+                              content: ReviewDetail(
+                                movieId: movieId,
+                                reviewId: id,
+                              )),
                           child: const Icon(
                             Icons.more_horiz,
                             size: 35,

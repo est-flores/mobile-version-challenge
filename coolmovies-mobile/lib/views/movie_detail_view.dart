@@ -149,9 +149,10 @@ class _MovieDetailViewState extends State<MovieDetailView> {
                         itemBuilder: ((context, index) {
                           Review review = reviews[index];
                           return ReviewTile(
+                              id: review.id,
+                              movieId: widget.id,
                               title: review.title,
                               body: review.body,
-                              // currentUserId == review.userReviewerId,
                               rating: review.rating.toDouble());
                         })),
               ],

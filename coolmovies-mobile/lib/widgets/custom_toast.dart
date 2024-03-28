@@ -18,7 +18,7 @@ class CustomToast extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25),
         color: backgroundColor ??
-            const Color.fromARGB(255, 227, 227, 227).withOpacity(0.95),
+            Color.fromARGB(255, 188, 188, 188).withOpacity(0.95),
       ),
       child: Center(
         child: Column(

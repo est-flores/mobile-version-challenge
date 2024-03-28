@@ -96,4 +96,28 @@ class ReviewsController extends ChangeNotifier {
       },
     ));
   }
+
+  deleteReviewById({
+    required BuildContext context,
+    required String reviewId,
+    required String movieId,
+  }) async {
+    var client = GraphQLProvider.of(context).value;
+    await client.mutate(MutationOptions(
+      document: gql('''
+            mutation DeleteMovieReview(\$id: UUID!) {
+            deleteMovieReviewById(input: { id: \$id }) {
+              deletedMovieReviewId
+            }
+          }
+          '''),
+      fetchPolicy: FetchPolicy.noCache,
+      variables: {
+        'id': reviewId,
+      },
+      onCompleted: (data) async {
+        await fetchReviews(context: context, movieId: movieId);
+      },
+    ));
+  }
 }
