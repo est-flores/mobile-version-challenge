@@ -78,5 +78,3 @@ If you want also to rebuild the Postgraphile Server, run this before the `up` co
     docker rmi coolmovies-graphql:**latest**
 
 Good luck and have fun!
-
-The ecoPortal Team

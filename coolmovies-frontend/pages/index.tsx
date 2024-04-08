@@ -23,7 +23,7 @@ const Home: NextPage = () => {
 
       <div css={styles.body}>
         <Typography variant={'h1'} css={styles.heading}>
-          {'EcoPortal Coolmovies Test'}
+          {'Coolmovies Test'}
         </Typography>
         <Typography variant={'subtitle1'} css={styles.subtitle}>
           {`Thank you for taking the time to take our test. We really appreciate it. 
